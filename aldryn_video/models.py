@@ -16,7 +16,7 @@ from django.utils.encoding import python_2_unicode_compatible
 
 
 @python_2_unicode_compatible
-class OEmbedVideoPlugin(CMSPlugin):
+class OEmbedVideoPluginAbstract(CMSPlugin):
     # exact provide name from youtube oembed response
     YOUTUBE = 'YouTube'
 
@@ -32,6 +32,9 @@ class OEmbedVideoPlugin(CMSPlugin):
     # cached oembed data
     oembed_data = JSONField(null=True)
     custom_params = models.CharField(_('custom params'), help_text=_('define custom params (e.g. "start=10&end=50")'), max_length=200, blank=True)
+
+    class Meta:
+        abstract = True
 
     def __str__(self):
         return self.url
@@ -111,3 +114,10 @@ class OEmbedVideoPlugin(CMSPlugin):
             data['player_url'] = player_url
 
         self.oembed_data = data
+
+
+class OEmbedVideoPlugin(OEmbedVideoPluginAbstract):
+
+    class Meta:
+        verbose_name = _('Embed video')
+        verbose_name_plural = _('Embed videos')
